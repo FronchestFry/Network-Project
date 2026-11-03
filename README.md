@@ -1,1 +1,3 @@
-Readme descripiton
+This week, I wanted to try getting familiar with socket. I had some passing familiarity with it from a prior project with some friends to make a chatroom, but I mostly did the GUI and sound design of that program, not the networking. Now I'm taking the time to learn the networking myself, possibly to make some game with LAN multiplayer.
+
+This will not suport full online games, as that would involve port forwarding, and port forwarding scares me, but it should allow LAN games on a wifi network as long as everyone is on the same one. It might (unsure) not even need internet connection on the wifi network since it's LAN and not properly online.
