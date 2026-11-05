@@ -23,13 +23,13 @@ while True:
     incoming_data = client_connection.recv(port)
 
     #Check that the client still exists
-
     if not incoming_data:
         print (f"client '{client_adress}' disconnected")
         break
 
-    #As long as they do, send the data back
 
-    print(f"recived '{incoming_data.decode()}'")
-    outgoing_data = incoming_data + b" (but echoier)"
-    client_connection.sendall(outgoing_data)
+#Handle the inbound data
+    print(f"Oponent attacked square '{incoming_data.decode()}'")
+    outgoing_data = input("Return fire at what cordinate?\n")
+    print(f"Shot fired at '{outgoing_data}'. Awaiting enemy's return fire.")
+    client_connection.sendall(outgoing_data.encode())
