@@ -1,5 +1,13 @@
 #Working out the UI for battleship
 
+'''
+NOTICE:
+
+DUE TO VSCODE ISSUES, I NOW HAVE TO WRITE THE CODE IN HERE AND THEN RUN/TEST THROUGH THE PYTHON IDLE, INSTEAD OF VSCODE'S RUNNER. PLEASE FORGIVE ANY SLIGHT ODDITIES IN TIMING CAUSED BY THIS.
+
+For some reason vscode is randomly adding "" arround my file names, causing it to look for a file that doesn't exist instead of the actual file I need to run.
+'''
+
 import pygame
 
 Ship_grid = pygame.display.set_mode((500,500))
