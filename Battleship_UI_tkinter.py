@@ -8,7 +8,6 @@ DUE TO VSCODE ISSUES, I NOW HAVE TO WRITE THE CODE IN HERE AND THEN RUN/TEST THR
 For some reason vscode is randomly adding "" arround my file names, causing it to look for a file that doesn't exist instead of the actual file I need to run.
 '''
 
-
 import tkinter as tk
 from math import floor
 

@@ -8,19 +8,28 @@ DUE TO VSCODE ISSUES, I NOW HAVE TO WRITE THE CODE IN HERE AND THEN RUN/TEST THR
 For some reason vscode is randomly adding "" arround my file names, causing it to look for a file that doesn't exist instead of the actual file I need to run.
 '''
 
-
 import tkinter as tk
-from math import floor
-
 Targeting_Grid = tk.Tk()
 
 Targeting_Grid.geometry("500x500")
 Targeting_Grid.title("Targeting grid")
-Targeting_Grid.configure(bg = "black")
+Targeting_Grid.configure(bg = "white")
 
 Columns = 9
 Rows = 9
 Buttons = []
+
+Board_state = [
+    [0,0,1,1,0,0,0,0,0],
+    [1,1,1,1,0,1,1,1,0],
+    [0,0,1,1,0,0,0,0,0],
+    [0,0,1,1,0,0,0,0,0],
+    [0,0,1,0,0,0,0,0,0],
+    [0,0,0,0,0,1,0,0,0],
+    [0,0,0,0,0,1,0,0,0],
+    [0,0,0,0,0,1,0,0,0],
+    [0,0,0,0,0,0,0,0,0]
+]
 
 import socket
 
@@ -40,21 +49,54 @@ class grid_button:
     def __init__(self, row, column):
         self.row = row
         self.column = column
-        button = tk.Button(Targeting_Grid, command = self.on_click, text= (self.column + 1, self.row + 1))
+        button = tk.Button(Targeting_Grid, command = self.on_click, text= (self.row, self.column))
         button.grid(row=row, column=column, sticky="nsew")
+        self.button = button
 
     def on_click(self):
         global cords
-        cords = (f' Row: {str(self.row + 1)}  Column: {str(self.column + 1)}')
+        cords = (str(self.row) + str(self.column))
         print(F'Currently targeting {cords}')
         Fire.place(x=250, y=400, anchor="center")
 
+def get_hit(hit_cords):
+    print(f"Opponent Fired at '{hit_cords}'")
+    x = int(hit_cords[1])
+    y = int(hit_cords[0])
+    hmd = Board_state[y][x]
+    hmd = Board_state[y][x]
+    if hmd == 0 or hmd == 2:
+        hmd = "miss"
+    elif hmd == 1:
+        hmd = "victory"
+        Board_state[y][x] = 0
+        for row in Board_state:
+            for square in row:
+                if square == 1:
+                    hmd = "hit"
+                else: pass
+
+    network_object.sendall(hmd.encode())
+    print (hmd)
 
 def send_cords(cords):
     Fire.place_forget()
     Targeting_Grid.withdraw()
-    print(f"Shot fired at '{cords}'. Awaiting enemy's return fire.")
+    print(f"Shot fired at '{cords}'.")
     network_object.sendall(cords.encode())
+    hmd = (network_object.recv(server_port)).decode()
+    print(hmd)
+    x = int(cords[1])
+    y = int(cords[0])
+    if hmd == "miss":
+        (Buttons[x][y]).button.config(bg = "blue")
+    elif hmd == "hit":
+        (Buttons[x][y]).button.config(bg = "red")
+    elif hmd == "victory":
+        print ("You win")
+        shutdown()
+
+    print("Awaiting enemy's return fire.")
     await_return()
 
 
@@ -64,7 +106,7 @@ def await_return():
         print (f"Host '{server_addr}' disconnected.")
         shutdown()
     elif not network_object._closed:
-        print(f"Opponent Returned Fire at '{incoming_data.decode()}'")
+        get_hit(incoming_data.decode())
         Targeting_Grid.deiconify()
         Targeting_Grid.update()
     else:
